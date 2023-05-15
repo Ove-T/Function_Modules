@@ -12,7 +12,7 @@ func ipsCalc(input string) (ip [4]uint8, subnetmask1 [4]uint8) {
 	matched := matcher.FindAllString(input, -1)
 	ip = [4]uint8{}
 	if len(matched) == 5 {
-		for i, _ := range ip {
+		for i := range ip {
 			temp, _ := strconv.Atoi(matched[i])
 			ip[i] = uint8(temp)
 		}
@@ -62,14 +62,18 @@ func IpRange(ip [4]uint8, subnetmask [4]uint8) {
 	}
 	ipMin := ip1
 	// [127 0 0 0] --> [127 0 0 1]
-	ipMin[3] = ip1[3] + 1
+	if ipMin[3] == 0 {
+		ipMin[3] = ip1[3] + 1
+	}
 	//ip2 := ipMax
 	// [127 0 0 255] --> [127 0 0 254]
-	ipMax[3] = ipMax[3] - 1
+	if ipMax[3] == 255 {
+		ipMax[3] = ipMax[3] - 1
+	}
 	fmt.Printf("%d,%d", ipMin, ipMax)
 }
 
 func main() {
-	var a = "192.168.0.10/24"
+	var a = "192.168.0.10/27"
 	ipsCalc(a)
 }
